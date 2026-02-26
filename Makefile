@@ -331,6 +331,8 @@ maybe-boost: deps/libOTe/libOTe
 	{ cd -; make boost; }
 
 OTE_OPTS += -DENABLE_SOFTSPOKEN_OT=ON -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_INSTALL_LIBDIR=lib
+LIBOTE_PATCH_SCRIPT = Scripts/apply-libote-patches.sh
+LIBOTE_PATCH_FILE = patches/libote-cryptotools-asio-post.patch
 
 ifeq ($(ARM), 1)
 OTE_OPTS += -DENABLE_AVX=OFF -DENABLE_SSE=OFF
@@ -359,13 +361,15 @@ ifeq ($(USE_KOS), 0)
 OT/OTExtensionWithMatrix.o: $(OTE)
 endif
 
-local/lib/liblibOTe.a: deps/libOTe/libOTe
+local/lib/liblibOTe.a: deps/libOTe/libOTe $(LIBOTE_PATCH_SCRIPT) $(LIBOTE_PATCH_FILE)
+	sh $(LIBOTE_PATCH_SCRIPT)
 	make maybe-boost; \
 	cd deps/libOTe; \
 	PATH="$(CURDIR)/local/bin:$(PATH)" python3 build.py --install=$(CURDIR)/local -- -DBUILD_SHARED_LIBS=0 $(OTE_OPTS) && \
 	touch ../../local/lib/liblibOTe.a
 
-$(SHARED_OTE): deps/libOTe/libOTe maybe-boost
+$(SHARED_OTE): deps/libOTe/libOTe maybe-boost $(LIBOTE_PATCH_SCRIPT) $(LIBOTE_PATCH_FILE)
+	sh $(LIBOTE_PATCH_SCRIPT)
 	cd deps/libOTe; \
 	python3 build.py --install=$(CURDIR)/local -- -DBUILD_SHARED_LIBS=1 $(OTE_OPTS)
 

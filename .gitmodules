@@ -9,7 +9,7 @@
 	url = https://github.com/simd-everywhere/simde
 [submodule "deps/libOTe"]
 	path = deps/libOTe
-	url = git@github.com:Kallistina/softspoken-implementation.git
+	url = https://github.com/mkskeller/softspoken-implementation
 [submodule "deps/SimplestOT_C"]
 	path = deps/SimplestOT_C
 	url = https://github.com/mkskeller/SimplestOT_C

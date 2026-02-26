@@ -1,0 +1,22 @@
+diff --git a/cryptoTools/Network/IOService.cpp b/cryptoTools/Network/IOService.cpp
+index 6c1e501..2a9fde4 100644
+--- a/cryptoTools/Network/IOService.cpp
++++ b/cryptoTools/Network/IOService.cpp
+@@ -21,10 +21,13 @@
+ namespace osuCrypto
+ {
+ 
+-    void post(IOService* ios, std::function<void()>&& fn)
+-    {
+-        boost::asio::post(std::move(fn));
+-    }
++    void post(IOService* ios, std::function<void()>&& fn)
++    {
++        if (ios)
++            boost::asio::post(ios->mIoService.get_executor(), std::move(fn));
++        else
++            fn();
++    }
+ 
+ 
+ 
